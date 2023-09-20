@@ -22,13 +22,18 @@ class DetailsActivity : AppCompatActivity() {
         setContentView(binding.root)
         Log.e("AAA", "Activity created")
 
+
+        viewModel.setMovieDetails(
+            id = intent.getIntExtra("id",0),
+        )
         binding.button.setOnClickListener { viewModel.changeMovie() }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.movieState.collect { movieState ->
                     binding.toolbar.title = movieState.title
-                    binding.textView2.text = movieState.description
+                    binding.textView2.text = movieState.overview
+                    binding.textView3.text = movieState.voteAverage.toString()
                 }
             }
         }
