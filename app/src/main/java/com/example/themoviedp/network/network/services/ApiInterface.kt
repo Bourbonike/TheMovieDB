@@ -1,5 +1,6 @@
-package com.example.themoviedp.retrofit
+package com.example.themoviedp.network.network.services
 
+import com.example.themoviedp.network.network.models.MovieDetailsModel
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path

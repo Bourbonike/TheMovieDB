@@ -1,4 +1,4 @@
-package com.example.themoviedp
+package com.example.themoviedp.details
 
 
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.themoviedp.DetailsViewModel
 import com.example.themoviedp.databinding.ActivityDetailsScreenBinding
 import kotlinx.coroutines.launch
 

@@ -1,4 +1,4 @@
-package com.example.themoviedp.retrofit
+package com.example.themoviedp.network.network.models
 
 import com.google.gson.annotations.SerializedName
 

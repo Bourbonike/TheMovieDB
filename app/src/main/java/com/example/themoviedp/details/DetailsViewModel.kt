@@ -1,7 +1,7 @@
 package com.example.themoviedp
 
 import androidx.lifecycle.ViewModel
-import com.example.themoviedp.retrofit.ApiInterface
+import com.example.themoviedp.network.network.services.ApiInterface
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
