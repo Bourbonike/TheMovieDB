@@ -1,7 +1,9 @@
-package com.example.themoviedp
+package com.example.themoviedp.details
+
 
 import androidx.lifecycle.ViewModel
 import com.example.themoviedp.network.network.services.ApiInterface
+import com.example.themoviedp.network.network.models.ActorsListModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +19,9 @@ data class MovieDetailsUi(
     val voteAverage: Double,
 )
 
+data class ActorsPopularUi(
+    val actorsList: List<ActorsListModel>,
+)
 
 class DetailsViewModel : ViewModel() {
     private val retrofit: Retrofit = Retrofit.Builder()
@@ -25,31 +30,62 @@ class DetailsViewModel : ViewModel() {
     private val movieApi: ApiInterface = retrofit.create(ApiInterface::class.java)
 
 
+    val actorsState = MutableStateFlow(
+        ActorsPopularUi(actorsList = listOf())
+    )
+
     val movieState = MutableStateFlow(
         MovieDetailsUi(
             id = 0,
             title = "",
             overview = "",
-            voteAverage = 0.0
+            voteAverage = 0.0,
         )
     )
 
     fun setMovieDetails(id: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             val movie = movieApi.getMovieDetails(id)
+            val actorsPage = movieApi.getActors(id)
+            actorsState.value = ActorsPopularUi(actorsList = actorsPage.results)
             movieState.value = MovieDetailsUi(
                 id = movie.id,
                 title = movie.title,
                 overview = movie.overview,
-                voteAverage = movie.voteAverage
+                voteAverage = movie.voteAverage,
             )
+
         }
     }
-
-    fun changeMovie() {
-        movieState.value =
-            MovieDetailsUi(id = 1, title = "title", overview = "Вячеславович", voteAverage = 10.0)
-    }
-
-
 }
+
+//    fun changeMovie() {
+//        movieState.value =
+//            MovieDetailsUi(id = 1, title = "title", overview = "Вячеславович", voteAverage = 10.0)
+//    }
+//    init {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            try {
+//
+//                Log.d("TestLogActors", "кидаем реквест")
+//
+//                Log.d("TestLogActors", "id=${615656}")
+//
+//                Log.d(
+//                    "TestLogActors", "получили фильмы ${actorsPage.results}"
+//                )
+//
+//            } catch (
+//                e: Exception
+//            ) {
+//                Log.d("TestLogActors", "ошибка: $e")
+//
+//            }
+//
+//
+//        }
+//
+//    }
+//
+//
+//}
