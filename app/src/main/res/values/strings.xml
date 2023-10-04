@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">TheMovieDP</string>
     <string name="title_activity_details_screen">details_screen_Activity</string>
     <!-- Strings used for fragments for navigation -->
@@ -12,4 +13,5 @@
     <string name="details_screen_2">details screen 2</string>
     <string name="details_screen_1">details screen 1</string>
     <string name="movie_rating">Movie rating -</string>
+    <string name="synopsis">SYNOPSIS</string>
 </resources>

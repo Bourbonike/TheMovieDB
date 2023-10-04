@@ -2,15 +2,18 @@ package com.example.themoviedp.network.network.models
 
 import com.google.gson.annotations.SerializedName
 
-data class MovieDetailsModel(
+data class MovieListModel(
     @SerializedName("id")
     val id: Int,
-    @SerializedName("overview")
-    val overview: String,
     @SerializedName("title")
     val title: String,
-    @SerializedName("vote_average")
-    val voteAverage: Double,
-    @SerializedName("backdropPath")
+    @SerializedName("poster_path")
+    val posterPath: String,
+
     val backdrop_path:String,
+)
+
+data class MoviePage(
+    @SerializedName("results")
+    val results: List<MovieListModel>
 )
