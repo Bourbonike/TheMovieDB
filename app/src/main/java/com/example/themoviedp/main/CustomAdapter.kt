@@ -4,7 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.themoviedp.databinding.MovieLayoutBinding
+import com.example.themoviedp.databinding.MovieLayout1Binding
+
 import com.example.themoviedp.network.network.models.MovieListModel
 
 class MovieAdapter(
@@ -16,11 +17,11 @@ class MovieAdapter(
         notifyDataSetChanged()
     }
 
-    class ViewHolder(val binding: MovieLayoutBinding) : RecyclerView.ViewHolder(binding.root) {}
+    class ViewHolder(val binding: MovieLayout1Binding) : RecyclerView.ViewHolder(binding.root) {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            MovieLayoutBinding.inflate(
+            MovieLayout1Binding.inflate(
                 LayoutInflater.from(
                     parent.context
                 )

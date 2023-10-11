@@ -2,8 +2,10 @@ package com.example.themoviedp.details
 
 
 import androidx.lifecycle.ViewModel
+import com.bumptech.glide.Glide
 import com.example.themoviedp.network.network.services.ApiInterface
 import com.example.themoviedp.network.network.models.ActorsListModel
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +19,11 @@ data class MovieDetailsUi(
     val title: String,
     val overview: String,
     val voteAverage: Double,
-)
+@SerializedName("poster_path")
+    val posterPath: String,
+
+
+    )
 
 data class ActorsPopularUi(
     val actorsList: List<ActorsListModel>,
@@ -40,6 +46,7 @@ class DetailsViewModel : ViewModel() {
             title = "",
             overview = "",
             voteAverage = 0.0,
+            posterPath = ""
         )
     )
 
@@ -53,8 +60,8 @@ class DetailsViewModel : ViewModel() {
                 title = movie.title,
                 overview = movie.overview,
                 voteAverage = movie.voteAverage,
+                posterPath = movie.posterPath
             )
-
         }
     }
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.themoviedp.databinding.ActivityDetailsScreenBinding
 import kotlinx.coroutines.launch
 
@@ -23,6 +24,8 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailsScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val imageUrl = "https://image.tmdb.org/t/p/w500/"
+
         Log.e("AAA", "Activity created")
 
         val recyclerViewActors = binding.rvActors
@@ -35,6 +38,7 @@ class DetailsActivity : AppCompatActivity() {
             id = intent.getIntExtra("id", 0),
         )
 
+        Log.d("TestLogDetails", "получили фильмы ${viewModel.movieState.value.posterPath}")
 
 //        binding.button.setOnClickListener { viewModel.changeMovie() }
 //
@@ -52,6 +56,9 @@ class DetailsActivity : AppCompatActivity() {
                     binding.toolbar.title = movieState.title
                     binding.synopsis.text = movieState.overview
                     binding.textView3.text = movieState.voteAverage.toString()
+                    Glide.with(this@DetailsActivity)
+                        .load("https://image.tmdb.org/t/p/w500/"+viewModel.movieState.value.posterPath)
+                        .into(binding.toolbarImage)
                 }
             }
         }

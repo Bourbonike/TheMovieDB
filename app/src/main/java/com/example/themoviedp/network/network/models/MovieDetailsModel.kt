@@ -12,5 +12,7 @@ data class MovieDetailsModel(
     @SerializedName("vote_average")
     val voteAverage: Double,
     @SerializedName("backdropPath")
-    val backdrop_path:String,
+    val backdropPath:String,
+    @SerializedName("poster_path")
+    val posterPath:String,
 )
