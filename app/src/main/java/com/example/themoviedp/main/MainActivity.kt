@@ -1,59 +1,40 @@
 package com.example.themoviedp.main
 
-import android.content.Intent
+
 import android.os.Bundle
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.GridLayoutManager
-import com.example.themoviedp.databinding.ActivityMainBinding
-import com.example.themoviedp.details.DetailsActivity
-import kotlinx.coroutines.launch
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.widget.ViewPager2
+import com.example.themoviedp.R
+import com.example.themoviedp.main.now.NowWatch
+import com.example.themoviedp.main.popular.Popular
+import com.example.themoviedp.main.top.TopRated
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
-    private val viewModel: MainViewModel by viewModels()
-    private val adapter = MovieAdapter(onItemClicked = { movieListModel ->
-        val intent = Intent(this@MainActivity, DetailsActivity::class.java)
-        intent.putExtra("id", movieListModel.id)
-        startActivity(intent)
-    })
 
+@AndroidEntryPoint
+class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-        //подключаем рецйкл
-        val recyclerViewMain = binding.rvMovies
-        recyclerViewMain.layoutManager = GridLayoutManager(this,2)
+        setContentView(R.layout.activity_main)
 
+        val viewPager: ViewPager2 = findViewById(R.id.viewPager)
+        val fragments =
+            listOf(Popular(), NowWatch(), TopRated()) // Replace with your fragment instances
+        val adapter = ViewPagerAdapter(fragments, this)
+        val tabNames: Array<String> = arrayOf(
+            "Popular",
+            "Now Watching",
+            "Top Rated",
+        )
+        viewPager.adapter = adapter
 
-        recyclerViewMain.adapter = adapter
-
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.popularsState.collect { popularState ->
-                    adapter.setMovieList(popularState.movieList)
-                    binding
-//                    binding.button1.setOnClickListener {
-//                        val movie1 = popularState.movieList.getOrNull(0)
-//                        if (movie1 != null) {
-//                            val intent = Intent(this@MainActivity, DetailsActivity::class.java)
-//                            intent.putExtra("id", movie1.id)
-//                            startActivity(intent)
-//                        }
-//
-//                    }
-                }
-            }
-        }
+        val tabLayout: TabLayout = findViewById(R.id.tabLayout)
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            // Set tab text or icon here if needed
+            tab.text = tabNames[position]
+        }.attach()
     }
-
-
 }
 
