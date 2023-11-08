@@ -1,55 +1,61 @@
-package com.example.themoviedp
+package com.example.themoviedp.details
+
 
 import androidx.lifecycle.ViewModel
-import com.example.themoviedp.network.network.services.ApiInterface
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import androidx.lifecycle.viewModelScope
+import com.example.themoviedp.network.network.models.ActorsListModel
+import com.example.themoviedp.network.network.models.MovieDetailsModel
+import com.example.themoviedp.repozitory.MovieRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
 
 data class MovieDetailsUi(
-    val id: Int,
-    val title: String,
-    val overview: String,
-    val voteAverage: Double,
+    val detailsModel: MovieDetailsModel?,
+    val actorsList: List<ActorsListModel>,
+    val isLoading: Boolean,
 )
 
 
-class DetailsViewModel : ViewModel() {
-    private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("https://api.themoviedb.org/")
-        .addConverterFactory(GsonConverterFactory.create()).build()
-    private val movieApi: ApiInterface = retrofit.create(ApiInterface::class.java)
+@HiltViewModel
+class DetailsViewModel @Inject constructor(private val movieRepository: MovieRepository) :
+    ViewModel() {
 
+    val errorFlow = MutableSharedFlow<Throwable>()
 
     val movieState = MutableStateFlow(
         MovieDetailsUi(
-            id = 0,
-            title = "",
-            overview = "",
-            voteAverage = 0.0
+            detailsModel = null,
+            actorsList = listOf(),
+            false
         )
     )
 
     fun setMovieDetails(id: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val movie = movieApi.getMovieDetails(id)
-            movieState.value = MovieDetailsUi(
-                id = movie.id,
-                title = movie.title,
-                overview = movie.overview,
-                voteAverage = movie.voteAverage
-            )
+        viewModelScope.launch {
+            kotlin.runCatching {
+                movieState.value = MovieDetailsUi(
+                    detailsModel = null,
+                    actorsList = listOf(),
+                    isLoading = true
+                )
+                delay(2000)
+                val movieDeferred = async { movieRepository.getMovieDetails(id) }
+                val actorsPageDeferred = async { movieRepository.getActors(id) }
+                val movie = movieDeferred.await()
+                val actorsPage = actorsPageDeferred.await()
+                MovieDetailsUi(detailsModel = movie, actorsList = actorsPage.results, false)
+            }.onSuccess { movieDetailsUi ->
+                movieState.value =
+                    movieDetailsUi
+            }.onFailure { error ->
+                errorFlow.emit(error)
+            }
         }
     }
-
-    fun changeMovie() {
-        movieState.value =
-            MovieDetailsUi(id = 1, title = "title", overview = "Вячеславович", voteAverage = 10.0)
-    }
-
-
 }

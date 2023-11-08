@@ -1,32 +1,40 @@
 package com.example.themoviedp.main
 
-import android.content.Intent
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.example.themoviedp.databinding.ActivityMainBinding
-import com.example.themoviedp.details.DetailsActivity
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+import android.os.Bundle
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.widget.ViewPager2
+import com.example.themoviedp.R
+import com.example.themoviedp.main.now.NowWatch
+import com.example.themoviedp.main.popular.Popular
+import com.example.themoviedp.main.top.TopRated
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
+
+
+@AndroidEntryPoint
+class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(R.layout.activity_main)
 
-        binding.button1.setOnClickListener {
+        val viewPager: ViewPager2 = findViewById(R.id.viewPager)
+        val fragments =
+            listOf(Popular(), NowWatch(), TopRated()) // Replace with your fragment instances
+        val adapter = ViewPagerAdapter(fragments, this)
+        val tabNames: Array<String> = arrayOf(
+            "Popular",
+            "Now Watching",
+            "Top Rated",
+        )
+        viewPager.adapter = adapter
 
-            val intent = Intent(this, DetailsActivity::class.java)
-            intent.putExtra("id", 1008042)
-            startActivity(intent)
-
-        }
-        binding.button2.setOnClickListener {
-            val intent = Intent(this, DetailsActivity::class.java)
-            intent.putExtra("id", 615656)
-            startActivity(intent)
-
-        }
+        val tabLayout: TabLayout = findViewById(R.id.tabLayout)
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            // Set tab text or icon here if needed
+            tab.text = tabNames[position]
+        }.attach()
     }
-
 }
+
