@@ -6,17 +6,24 @@ plugins {
 }
 
 android {
-    namespace 'com.example.themoviedp'
+    namespace 'com.example.themoviedb'
     compileSdk 33
 
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
     defaultConfig {
-        applicationId "com.example.themoviedp"
+        applicationId "com.example.themoviedb"
         minSdk 21
         targetSdk 33
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "MOVIE_DB_API_KEY", "${properties.getProperty('MOVIE_DB_API_KEY')}"
+        buildConfigField "String", "MOVIE_DB_BASE_IMAGES_URL", '"https://image.tmdb.org/t/p/w500/"'
+        buildConfigField "String", "MOVIE_DB_API_BASE_URL", '"https://api.themoviedb.org/"'
     }
 
     buildTypes {
